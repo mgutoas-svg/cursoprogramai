@@ -162,11 +162,8 @@ function RelatoriosPage() {
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm bg-muted px-2 py-0.5 rounded">{veiculo.placa}</span>
                       <span className="font-semibold">{veiculo.modelo}</span>
-                      {veiculo.ano && <span className="text-xs text-muted-foreground">({veiculo.ano})</span>}
+                      {veiculo.ano_modelo && <span className="text-xs text-muted-foreground">({veiculo.ano_modelo})</span>}
                     </div>
-                    {veiculo.obra_alocado && (
-                      <div className="text-xs text-muted-foreground mt-1">Obra: {veiculo.obra_alocado}</div>
-                    )}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-muted-foreground">Total no período</div>
