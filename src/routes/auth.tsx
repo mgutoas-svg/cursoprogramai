@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Wrench, Loader2 } from "lucide-react";
+import { Wrench, Loader2, Info } from "lucide-react";
+import { bootstrapDefaultAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Acesso Administrativo — OperaFlow" }] }),
@@ -19,11 +19,20 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bootstrap, setBootstrap] = useState<{ email: string; password: string } | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) navigate({ to: "/admin/chamados", replace: true });
     });
+    // Garante a existência do admin padrão na primeira execução
+    bootstrapDefaultAdmin()
+      .then((res) => {
+        if (res.created && "password" in res) {
+          setBootstrap({ email: res.email, password: res.password as string });
+        }
+      })
+      .catch(() => {});
   }, [navigate]);
 
   async function handleLogin(e: React.FormEvent) {
@@ -33,19 +42,6 @@ function AuthPage() {
     setLoading(false);
     if (error) return toast.error("Falha no login", { description: error.message });
     toast.success("Bem-vindo!");
-    navigate({ to: "/admin/chamados", replace: true });
-  }
-
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email, password,
-      options: { emailRedirectTo: `${window.location.origin}/admin/chamados` },
-    });
-    setLoading(false);
-    if (error) return toast.error("Falha no cadastro", { description: error.message });
-    toast.success("Cadastro realizado!", { description: "Você já pode acessar o painel." });
     navigate({ to: "/admin/chamados", replace: true });
   }
 
@@ -63,47 +59,37 @@ function AuthPage() {
         <Card className="p-6 md:p-8" style={{ boxShadow: "var(--shadow-elegant)" }}>
           <h1 className="text-xl font-bold text-center mb-1">Painel Administrativo</h1>
           <p className="text-center text-sm text-muted-foreground mb-6">
-            Acesse para gerenciar demandas, frota e custos.
+            Acesso restrito a administradores.
           </p>
 
-          <Tabs defaultValue="login">
-            <TabsList className="grid grid-cols-2 w-full mb-4">
-              <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Cadastrar</TabsTrigger>
-            </TabsList>
+          {bootstrap && (
+            <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs">
+              <div className="flex items-center gap-2 font-medium text-primary mb-1">
+                <Info className="h-3.5 w-3.5" /> Conta padrão criada
+              </div>
+              <div>E-mail: <span className="font-mono">{bootstrap.email}</span></div>
+              <div>Senha: <span className="font-mono">{bootstrap.password}</span></div>
+              <div className="mt-1 text-muted-foreground">Altere a senha após o primeiro acesso.</div>
+            </div>
+          )}
 
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="le">E-mail</Label>
-                  <Input id="le" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lp">Senha</Label>
-                  <Input id="lp" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <Button type="submit" className="w-full h-11" disabled={loading}>
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Entrar"}
-                </Button>
-              </form>
-            </TabsContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="le">E-mail</Label>
+              <Input id="le" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lp">Senha</Label>
+              <Input id="lp" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <Button type="submit" className="w-full h-11" disabled={loading}>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Entrar"}
+            </Button>
+          </form>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="se">E-mail</Label>
-                  <Input id="se" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sp">Senha</Label>
-                  <Input id="sp" type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <Button type="submit" className="w-full h-11" disabled={loading}>
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Criar conta"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            Novas contas só podem ser criadas por um administrador, dentro do painel.
+          </p>
         </Card>
 
         <Link to="/" className="mt-6 block text-center text-sm text-muted-foreground hover:text-foreground">
