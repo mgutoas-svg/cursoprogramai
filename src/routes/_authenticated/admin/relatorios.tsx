@@ -212,32 +212,11 @@ function RelatoriosPage() {
                   </div>
                 )}
 
-                {(veiculo.vencimento_ipva || veiculo.vencimento_seguro || veiculo.vencimento_licenciamento) && (
-                  <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-                    <Venc label="IPVA" data={veiculo.vencimento_ipva} />
-                    <Venc label="Seguro" data={veiculo.vencimento_seguro} />
-                    <Venc label="Licenc." data={veiculo.vencimento_licenciamento} />
-                  </div>
-                )}
               </Card>
             );
           })}
         </div>
       )}
-    </div>
-  );
-}
-
-function Venc({ label, data }: { label: string; data: string | null }) {
-  if (!data) return <div className="rounded border border-border p-2 text-muted-foreground">{label}: —</div>;
-  const d = new Date(data);
-  const hoje = new Date();
-  const diff = Math.ceil((d.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-  const cor = diff < 0 ? "text-destructive" : diff < 30 ? "text-yellow-600 dark:text-yellow-500" : "text-foreground";
-  return (
-    <div className="rounded border border-border p-2">
-      <div className="text-muted-foreground">{label}</div>
-      <div className={`font-semibold ${cor}`}>{d.toLocaleDateString("pt-BR")}</div>
     </div>
   );
 }
