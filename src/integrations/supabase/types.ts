@@ -14,7 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      custos: {
+        Row: {
+          categoria: string
+          comprovante_url: string | null
+          created_at: string
+          data_gasto: string
+          demanda_id: string | null
+          descricao: string
+          id: string
+          prestador_oficina: string | null
+          valor: number
+          veiculo_id: string | null
+        }
+        Insert: {
+          categoria: string
+          comprovante_url?: string | null
+          created_at?: string
+          data_gasto: string
+          demanda_id?: string | null
+          descricao: string
+          id?: string
+          prestador_oficina?: string | null
+          valor: number
+          veiculo_id?: string | null
+        }
+        Update: {
+          categoria?: string
+          comprovante_url?: string | null
+          created_at?: string
+          data_gasto?: string
+          demanda_id?: string | null
+          descricao?: string
+          id?: string
+          prestador_oficina?: string | null
+          valor?: number
+          veiculo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custos_demanda_id_fkey"
+            columns: ["demanda_id"]
+            isOneToOne: false
+            referencedRelation: "demandas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "custos_veiculo_id_fkey"
+            columns: ["veiculo_id"]
+            isOneToOne: false
+            referencedRelation: "veiculos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      demandas: {
+        Row: {
+          cliente_nome: string
+          created_at: string
+          custo_lancado: boolean
+          descricao: string
+          foto_geral_url: string[] | null
+          foto_peca_url: string[] | null
+          id: string
+          local_obra: string
+          notas_pesquisa: string | null
+          orcamento_url: string[] | null
+          prazo_resolucao: string | null
+          prestador_oficina: string | null
+          status: string
+          urgencia: string
+          valor_reparo: number | null
+        }
+        Insert: {
+          cliente_nome: string
+          created_at?: string
+          custo_lancado?: boolean
+          descricao: string
+          foto_geral_url?: string[] | null
+          foto_peca_url?: string[] | null
+          id?: string
+          local_obra: string
+          notas_pesquisa?: string | null
+          orcamento_url?: string[] | null
+          prazo_resolucao?: string | null
+          prestador_oficina?: string | null
+          status?: string
+          urgencia?: string
+          valor_reparo?: number | null
+        }
+        Update: {
+          cliente_nome?: string
+          created_at?: string
+          custo_lancado?: boolean
+          descricao?: string
+          foto_geral_url?: string[] | null
+          foto_peca_url?: string[] | null
+          id?: string
+          local_obra?: string
+          notas_pesquisa?: string | null
+          orcamento_url?: string[] | null
+          prazo_resolucao?: string | null
+          prestador_oficina?: string | null
+          status?: string
+          urgencia?: string
+          valor_reparo?: number | null
+        }
+        Relationships: []
+      }
+      manutencao_preventiva: {
+        Row: {
+          created_at: string
+          data_proxima_revisao: string | null
+          id: string
+          item: string
+          km_atual: number | null
+          km_proxima_troca: number | null
+          km_ultima_troca: number | null
+          status_item: string | null
+          veiculo_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_proxima_revisao?: string | null
+          id?: string
+          item: string
+          km_atual?: number | null
+          km_proxima_troca?: number | null
+          km_ultima_troca?: number | null
+          status_item?: string | null
+          veiculo_id: string
+        }
+        Update: {
+          created_at?: string
+          data_proxima_revisao?: string | null
+          id?: string
+          item?: string
+          km_atual?: number | null
+          km_proxima_troca?: number | null
+          km_ultima_troca?: number | null
+          status_item?: string | null
+          veiculo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "manutencao_preventiva_veiculo_id_fkey"
+            columns: ["veiculo_id"]
+            isOneToOne: false
+            referencedRelation: "veiculos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      veiculos: {
+        Row: {
+          ano: number | null
+          created_at: string
+          crlv_url: string | null
+          historico_multas_url: string[] | null
+          id: string
+          modelo: string
+          obra_alocado: string | null
+          placa: string
+          vencimento_ipva: string | null
+          vencimento_licenciamento: string | null
+          vencimento_seguro: string | null
+        }
+        Insert: {
+          ano?: number | null
+          created_at?: string
+          crlv_url?: string | null
+          historico_multas_url?: string[] | null
+          id?: string
+          modelo: string
+          obra_alocado?: string | null
+          placa: string
+          vencimento_ipva?: string | null
+          vencimento_licenciamento?: string | null
+          vencimento_seguro?: string | null
+        }
+        Update: {
+          ano?: number | null
+          created_at?: string
+          crlv_url?: string | null
+          historico_multas_url?: string[] | null
+          id?: string
+          modelo?: string
+          obra_alocado?: string | null
+          placa?: string
+          vencimento_ipva?: string | null
+          vencimento_licenciamento?: string | null
+          vencimento_seguro?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
