@@ -33,6 +33,7 @@ type Demanda = {
   valor_reparo: number | null;
   prazo_resolucao: string | null;
   notas_pesquisa: string | null;
+  whatsapp_contato: string | null;
 };
 
 const STATUS = ["Pendente", "Em Análise", "Em Execução", "Aguardando Pagamento", "Concluído"];
