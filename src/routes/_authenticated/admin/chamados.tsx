@@ -133,7 +133,7 @@ function ChamadosPage() {
                       <Badge variant={statusVariant(d.status)} className="text-[10px]">{d.status}</Badge>
                       <span className={`text-[10px] border rounded px-1.5 py-0.5 ${urgenciaColor(d.urgencia)}`}>{d.urgencia}</span>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{d.local_obra}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{d.local_obra}{d.whatsapp_contato ? ` · 📱 ${d.whatsapp_contato}` : ""}</div>
                     <div className="text-sm mt-1 line-clamp-2 text-foreground/80">{d.descricao}</div>
                   </div>
                   <div className="text-[10px] text-muted-foreground shrink-0">
