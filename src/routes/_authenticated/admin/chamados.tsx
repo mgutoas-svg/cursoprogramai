@@ -167,6 +167,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
       valor_reparo: demanda.valor_reparo ?? null,
       prazo_resolucao: demanda.prazo_resolucao ?? "",
       notas_pesquisa: demanda.notas_pesquisa ?? "",
+      whatsapp_contato: demanda.whatsapp_contato ?? "",
     });
     (async () => {
       setFotoGeralUrls(await getSignedUrls(demanda.foto_geral_url ?? []));
