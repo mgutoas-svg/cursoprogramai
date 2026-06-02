@@ -25,6 +25,7 @@ type Form = {
   local_obra: string;
   descricao: string;
   whatsapp_contato: string;
+  nome_responsavel: string;
 };
 
 function FileField({
@@ -63,7 +64,7 @@ function FileField({
 }
 
 function PublicForm() {
-  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
+  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "", nome_responsavel: "" });
   const [fotosGerais, setFotosGerais] = useState<File[]>([]);
   const [fotosPeca, setFotosPeca] = useState<File[]>([]);
   const [orcamentos, setOrcamentos] = useState<File[]>([]);
@@ -71,7 +72,7 @@ function PublicForm() {
   const [success, setSuccess] = useState(false);
 
   const reset = () => {
-    setForm({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
+    setForm({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "", nome_responsavel: "" });
     setFotosGerais([]); setFotosPeca([]); setOrcamentos([]);
   };
 
@@ -94,6 +95,7 @@ function PublicForm() {
         local_obra: form.local_obra,
         descricao: form.descricao,
         whatsapp_contato: form.whatsapp_contato || null,
+        nome_responsavel: form.nome_responsavel || null,
         foto_geral_url, foto_peca_url, orcamento_url,
       });
       if (error) throw error;
@@ -172,6 +174,16 @@ function PublicForm() {
                 onChange={(e) => setForm({ ...form, local_obra: e.target.value })}
                 placeholder="Endereço ou nome do canteiro"
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="nome_responsavel">Responsável pelo chamado</Label>
+              <Input
+                id="nome_responsavel"
+                value={form.nome_responsavel}
+                onChange={(e) => setForm({ ...form, nome_responsavel: e.target.value })}
+                placeholder="Nome do responsável"
               />
             </div>
 

@@ -34,6 +34,7 @@ type Demanda = {
   prazo_resolucao: string | null;
   notas_pesquisa: string | null;
   whatsapp_contato: string | null;
+  nome_responsavel: string | null;
 };
 
 const STATUS = ["Pendente", "Em Análise", "Em Execução", "Aguardando Pagamento", "Concluído"];
@@ -130,6 +131,7 @@ function ChamadosPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold truncate">{d.cliente_nome}</span>
+                      {d.nome_responsavel && <span className="text-xs text-muted-foreground truncate">({d.nome_responsavel})</span>}
                       <Badge variant={statusVariant(d.status)} className="text-[10px]">{d.status}</Badge>
                       <span className={`text-[10px] border rounded px-1.5 py-0.5 ${urgenciaColor(d.urgencia)}`}>{d.urgencia}</span>
                     </div>
@@ -168,6 +170,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
       prazo_resolucao: demanda.prazo_resolucao ?? "",
       notas_pesquisa: demanda.notas_pesquisa ?? "",
       whatsapp_contato: demanda.whatsapp_contato ?? "",
+      nome_responsavel: demanda.nome_responsavel ?? "",
     });
     (async () => {
       setFotoGeralUrls(await getSignedUrls(demanda.foto_geral_url ?? []));
@@ -189,6 +192,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
         prazo_resolucao: form.prazo_resolucao || null,
         notas_pesquisa: form.notas_pesquisa || null,
         whatsapp_contato: form.whatsapp_contato || null,
+        nome_responsavel: form.nome_responsavel || null,
       })
       .eq("id", demanda.id);
     setSaving(false);
@@ -211,6 +215,9 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
           <div className="space-y-5 mt-4 p-4">
             <Card className="p-4 bg-muted/30">
               <div className="font-semibold">{demanda.cliente_nome}</div>
+              {demanda.nome_responsavel && (
+                <div className="text-xs text-muted-foreground">Responsável: {demanda.nome_responsavel}</div>
+              )}
               <div className="text-xs text-muted-foreground">{demanda.local_obra}</div>
               <p className="text-sm mt-2 whitespace-pre-wrap">{demanda.descricao}</p>
             </Card>
@@ -239,6 +246,10 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
             <div className="space-y-2">
               <Label>Prestador / Oficina</Label>
               <Input value={form.prestador_oficina ?? ""} onChange={(e) => setForm({ ...form, prestador_oficina: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>Responsável pelo chamado</Label>
+              <Input value={form.nome_responsavel ?? ""} onChange={(e) => setForm({ ...form, nome_responsavel: e.target.value })} />
             </div>
             <div className="space-y-2">
               <Label>WhatsApp de contato</Label>
