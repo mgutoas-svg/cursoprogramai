@@ -85,6 +85,7 @@ export type Database = {
           status: string
           urgencia: string
           valor_reparo: number | null
+          whatsapp_contato: string | null
         }
         Insert: {
           cliente_nome: string
@@ -102,6 +103,7 @@ export type Database = {
           status?: string
           urgencia?: string
           valor_reparo?: number | null
+          whatsapp_contato?: string | null
         }
         Update: {
           cliente_nome?: string
@@ -119,6 +121,7 @@ export type Database = {
           status?: string
           urgencia?: string
           valor_reparo?: number | null
+          whatsapp_contato?: string | null
         }
         Relationships: []
       }
