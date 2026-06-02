@@ -38,5 +38,5 @@ export async function getSignedUrl(path: string): Promise<string | null> {
 export async function getSignedUrls(paths: string[]): Promise<string[]> {
   if (!paths?.length) return [];
   const { data } = await supabase.storage.from(BUCKET).createSignedUrls(paths, 3600);
-  return (data ?? []).map((d) => d.signedUrl).filter(Boolean);
+  return (data ?? []).map((d) => d.signedUrl).filter((u): u is string => Boolean(u));
 }
