@@ -71,7 +71,7 @@ function PublicForm() {
   const [success, setSuccess] = useState(false);
 
   const reset = () => {
-    setForm({ cliente_nome: "", local_obra: "", descricao: "" });
+    setForm({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
     setFotosGerais([]); setFotosPeca([]); setOrcamentos([]);
   };
 
