@@ -188,6 +188,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
         valor_reparo: form.valor_reparo || null,
         prazo_resolucao: form.prazo_resolucao || null,
         notas_pesquisa: form.notas_pesquisa || null,
+        whatsapp_contato: form.whatsapp_contato || null,
       })
       .eq("id", demanda.id);
     setSaving(false);
@@ -238,6 +239,10 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
             <div className="space-y-2">
               <Label>Prestador / Oficina</Label>
               <Input value={form.prestador_oficina ?? ""} onChange={(e) => setForm({ ...form, prestador_oficina: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>WhatsApp de contato</Label>
+              <Input type="tel" value={form.whatsapp_contato ?? ""} onChange={(e) => setForm({ ...form, whatsapp_contato: e.target.value })} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
