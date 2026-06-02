@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Bell, Truck, Wrench as WrenchIcon, DollarSign, LogOut, Menu, X, Wrench, Users } from "lucide-react";
+import { Bell, Truck, Wrench as WrenchIcon, DollarSign, LogOut, Menu, X, Wrench, Users, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -33,6 +33,7 @@ const NAV = [
   { to: "/admin/frota", label: "Frota & Documentos", icon: Truck },
   { to: "/admin/manutencao", label: "Manutenção", icon: WrenchIcon },
   { to: "/admin/custos", label: "Custos", icon: DollarSign },
+  { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
 ] as const;
 

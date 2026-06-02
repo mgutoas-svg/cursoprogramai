@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
+import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin/relatorios'
 import { Route as AuthenticatedAdminManutencaoRouteImport } from './routes/_authenticated/admin/manutencao'
 import { Route as AuthenticatedAdminFrotaRouteImport } from './routes/_authenticated/admin/frota'
 import { Route as AuthenticatedAdminCustosRouteImport } from './routes/_authenticated/admin/custos'
@@ -36,6 +37,12 @@ const AuthenticatedAdminUsuariosRoute =
   AuthenticatedAdminUsuariosRouteImport.update({
     id: '/admin/usuarios',
     path: '/admin/usuarios',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminRelatoriosRoute =
+  AuthenticatedAdminRelatoriosRouteImport.update({
+    id: '/admin/relatorios',
+    path: '/admin/relatorios',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAdminManutencaoRoute =
@@ -69,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/admin/custos': typeof AuthenticatedAdminCustosRoute
   '/admin/frota': typeof AuthenticatedAdminFrotaRoute
   '/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
+  '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
 }
 export interface FileRoutesByTo {
@@ -78,6 +86,7 @@ export interface FileRoutesByTo {
   '/admin/custos': typeof AuthenticatedAdminCustosRoute
   '/admin/frota': typeof AuthenticatedAdminFrotaRoute
   '/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
+  '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
 }
 export interface FileRoutesById {
@@ -89,6 +98,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/custos': typeof AuthenticatedAdminCustosRoute
   '/_authenticated/admin/frota': typeof AuthenticatedAdminFrotaRoute
   '/_authenticated/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
+  '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/admin/custos'
     | '/admin/frota'
     | '/admin/manutencao'
+    | '/admin/relatorios'
     | '/admin/usuarios'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/admin/custos'
     | '/admin/frota'
     | '/admin/manutencao'
+    | '/admin/relatorios'
     | '/admin/usuarios'
   id:
     | '__root__'
@@ -119,6 +131,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/custos'
     | '/_authenticated/admin/frota'
     | '/_authenticated/admin/manutencao'
+    | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/usuarios'
   fileRoutesById: FileRoutesById
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/relatorios': {
+      id: '/_authenticated/admin/relatorios'
+      path: '/admin/relatorios'
+      fullPath: '/admin/relatorios'
+      preLoaderRoute: typeof AuthenticatedAdminRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/manutencao': {
       id: '/_authenticated/admin/manutencao'
       path: '/admin/manutencao'
@@ -194,6 +214,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminCustosRoute: typeof AuthenticatedAdminCustosRoute
   AuthenticatedAdminFrotaRoute: typeof AuthenticatedAdminFrotaRoute
   AuthenticatedAdminManutencaoRoute: typeof AuthenticatedAdminManutencaoRoute
+  AuthenticatedAdminRelatoriosRoute: typeof AuthenticatedAdminRelatoriosRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
 }
 
@@ -202,6 +223,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminCustosRoute: AuthenticatedAdminCustosRoute,
   AuthenticatedAdminFrotaRoute: AuthenticatedAdminFrotaRoute,
   AuthenticatedAdminManutencaoRoute: AuthenticatedAdminManutencaoRoute,
+  AuthenticatedAdminRelatoriosRoute: AuthenticatedAdminRelatoriosRoute,
   AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
 }
 
@@ -216,13 +238,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
