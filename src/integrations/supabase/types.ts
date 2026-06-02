@@ -78,6 +78,7 @@ export type Database = {
           foto_peca_url: string[] | null
           id: string
           local_obra: string
+          nome_responsavel: string | null
           notas_pesquisa: string | null
           orcamento_url: string[] | null
           prazo_resolucao: string | null
@@ -96,6 +97,7 @@ export type Database = {
           foto_peca_url?: string[] | null
           id?: string
           local_obra: string
+          nome_responsavel?: string | null
           notas_pesquisa?: string | null
           orcamento_url?: string[] | null
           prazo_resolucao?: string | null
@@ -114,6 +116,7 @@ export type Database = {
           foto_peca_url?: string[] | null
           id?: string
           local_obra?: string
+          nome_responsavel?: string | null
           notas_pesquisa?: string | null
           orcamento_url?: string[] | null
           prazo_resolucao?: string | null
