@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Bell, Truck, Wrench as WrenchIcon, DollarSign, LogOut, Menu, X, Wrench } from "lucide-react";
+import { Bell, Truck, Wrench as WrenchIcon, DollarSign, LogOut, Menu, X, Wrench, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -11,6 +11,18 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth" });
+
+    // Exige papel de admin
+    const { data: roleRow } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (!roleRow) {
+      await supabase.auth.signOut();
+      throw redirect({ to: "/auth" });
+    }
     return { user: data.user };
   },
   component: AdminLayout,
@@ -21,6 +33,7 @@ const NAV = [
   { to: "/admin/frota", label: "Frota & Documentos", icon: Truck },
   { to: "/admin/manutencao", label: "Manutenção", icon: WrenchIcon },
   { to: "/admin/custos", label: "Custos", icon: DollarSign },
+  { to: "/admin/usuarios", label: "Usuários", icon: Users },
 ] as const;
 
 function AdminLayout() {
