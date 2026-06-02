@@ -195,43 +195,100 @@ export type Database = {
       }
       veiculos: {
         Row: {
-          ano: number | null
+          ano_fabricacao: number | null
+          ano_modelo: number | null
+          capacidade: string | null
+          carroceria: string | null
+          cat: string | null
+          categoria: string | null
+          chassi: string | null
+          cmt: string | null
+          codigo_seguranca_cla: string | null
+          combustivel: string | null
+          cor_predominante: string | null
           created_at: string
           crlv_url: string | null
-          historico_multas_url: string[] | null
+          data_emissao: string | null
+          eixos: number | null
+          especie_tipo: string | null
+          exercicio: number | null
           id: string
+          local_emissao: string | null
+          lotacao: string | null
           modelo: string
-          obra_alocado: string | null
+          motor: string | null
+          numero_crv: string | null
+          peso_bruto_total: string | null
           placa: string
-          vencimento_ipva: string | null
-          vencimento_licenciamento: string | null
-          vencimento_seguro: string | null
+          placa_anterior: string | null
+          potencia_cilindrada: string | null
+          proprietario_cpf_cnpj: string | null
+          proprietario_nome: string | null
+          renavam: string | null
         }
         Insert: {
-          ano?: number | null
+          ano_fabricacao?: number | null
+          ano_modelo?: number | null
+          capacidade?: string | null
+          carroceria?: string | null
+          cat?: string | null
+          categoria?: string | null
+          chassi?: string | null
+          cmt?: string | null
+          codigo_seguranca_cla?: string | null
+          combustivel?: string | null
+          cor_predominante?: string | null
           created_at?: string
           crlv_url?: string | null
-          historico_multas_url?: string[] | null
+          data_emissao?: string | null
+          eixos?: number | null
+          especie_tipo?: string | null
+          exercicio?: number | null
           id?: string
+          local_emissao?: string | null
+          lotacao?: string | null
           modelo: string
-          obra_alocado?: string | null
+          motor?: string | null
+          numero_crv?: string | null
+          peso_bruto_total?: string | null
           placa: string
-          vencimento_ipva?: string | null
-          vencimento_licenciamento?: string | null
-          vencimento_seguro?: string | null
+          placa_anterior?: string | null
+          potencia_cilindrada?: string | null
+          proprietario_cpf_cnpj?: string | null
+          proprietario_nome?: string | null
+          renavam?: string | null
         }
         Update: {
-          ano?: number | null
+          ano_fabricacao?: number | null
+          ano_modelo?: number | null
+          capacidade?: string | null
+          carroceria?: string | null
+          cat?: string | null
+          categoria?: string | null
+          chassi?: string | null
+          cmt?: string | null
+          codigo_seguranca_cla?: string | null
+          combustivel?: string | null
+          cor_predominante?: string | null
           created_at?: string
           crlv_url?: string | null
-          historico_multas_url?: string[] | null
+          data_emissao?: string | null
+          eixos?: number | null
+          especie_tipo?: string | null
+          exercicio?: number | null
           id?: string
+          local_emissao?: string | null
+          lotacao?: string | null
           modelo?: string
-          obra_alocado?: string | null
+          motor?: string | null
+          numero_crv?: string | null
+          peso_bruto_total?: string | null
           placa?: string
-          vencimento_ipva?: string | null
-          vencimento_licenciamento?: string | null
-          vencimento_seguro?: string | null
+          placa_anterior?: string | null
+          potencia_cilindrada?: string | null
+          proprietario_cpf_cnpj?: string | null
+          proprietario_nome?: string | null
+          renavam?: string | null
         }
         Relationships: []
       }

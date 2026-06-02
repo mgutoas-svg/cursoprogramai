@@ -1,0 +1,35 @@
+
+ALTER TABLE public.veiculos
+  DROP COLUMN IF EXISTS obra_alocado,
+  DROP COLUMN IF EXISTS vencimento_ipva,
+  DROP COLUMN IF EXISTS vencimento_seguro,
+  DROP COLUMN IF EXISTS vencimento_licenciamento,
+  DROP COLUMN IF EXISTS historico_multas_url,
+  DROP COLUMN IF EXISTS ano;
+
+ALTER TABLE public.veiculos
+  ADD COLUMN IF NOT EXISTS renavam text,
+  ADD COLUMN IF NOT EXISTS exercicio integer,
+  ADD COLUMN IF NOT EXISTS ano_fabricacao integer,
+  ADD COLUMN IF NOT EXISTS ano_modelo integer,
+  ADD COLUMN IF NOT EXISTS numero_crv text,
+  ADD COLUMN IF NOT EXISTS codigo_seguranca_cla text,
+  ADD COLUMN IF NOT EXISTS cat text,
+  ADD COLUMN IF NOT EXISTS categoria text,
+  ADD COLUMN IF NOT EXISTS especie_tipo text,
+  ADD COLUMN IF NOT EXISTS placa_anterior text,
+  ADD COLUMN IF NOT EXISTS chassi text,
+  ADD COLUMN IF NOT EXISTS cor_predominante text,
+  ADD COLUMN IF NOT EXISTS combustivel text,
+  ADD COLUMN IF NOT EXISTS capacidade text,
+  ADD COLUMN IF NOT EXISTS potencia_cilindrada text,
+  ADD COLUMN IF NOT EXISTS peso_bruto_total text,
+  ADD COLUMN IF NOT EXISTS motor text,
+  ADD COLUMN IF NOT EXISTS cmt text,
+  ADD COLUMN IF NOT EXISTS eixos integer,
+  ADD COLUMN IF NOT EXISTS lotacao text,
+  ADD COLUMN IF NOT EXISTS carroceria text,
+  ADD COLUMN IF NOT EXISTS proprietario_nome text,
+  ADD COLUMN IF NOT EXISTS proprietario_cpf_cnpj text,
+  ADD COLUMN IF NOT EXISTS local_emissao text,
+  ADD COLUMN IF NOT EXISTS data_emissao date;
