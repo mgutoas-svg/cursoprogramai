@@ -24,6 +24,7 @@ type Form = {
   cliente_nome: string;
   local_obra: string;
   descricao: string;
+  whatsapp_contato: string;
 };
 
 function FileField({
@@ -62,7 +63,7 @@ function FileField({
 }
 
 function PublicForm() {
-  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "" });
+  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
   const [fotosGerais, setFotosGerais] = useState<File[]>([]);
   const [fotosPeca, setFotosPeca] = useState<File[]>([]);
   const [orcamentos, setOrcamentos] = useState<File[]>([]);
@@ -70,7 +71,7 @@ function PublicForm() {
   const [success, setSuccess] = useState(false);
 
   const reset = () => {
-    setForm({ cliente_nome: "", local_obra: "", descricao: "" });
+    setForm({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
     setFotosGerais([]); setFotosPeca([]); setOrcamentos([]);
   };
 
@@ -92,6 +93,7 @@ function PublicForm() {
         cliente_nome: form.cliente_nome,
         local_obra: form.local_obra,
         descricao: form.descricao,
+        whatsapp_contato: form.whatsapp_contato || null,
         foto_geral_url, foto_peca_url, orcamento_url,
       });
       if (error) throw error;
@@ -170,6 +172,17 @@ function PublicForm() {
                 onChange={(e) => setForm({ ...form, local_obra: e.target.value })}
                 placeholder="Endereço ou nome do canteiro"
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp_contato">WhatsApp de contato</Label>
+              <Input
+                id="whatsapp_contato"
+                type="tel"
+                value={form.whatsapp_contato}
+                onChange={(e) => setForm({ ...form, whatsapp_contato: e.target.value })}
+                placeholder="(11) 99999-9999"
               />
             </div>
 

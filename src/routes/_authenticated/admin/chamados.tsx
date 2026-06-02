@@ -33,6 +33,7 @@ type Demanda = {
   valor_reparo: number | null;
   prazo_resolucao: string | null;
   notas_pesquisa: string | null;
+  whatsapp_contato: string | null;
 };
 
 const STATUS = ["Pendente", "Em Análise", "Em Execução", "Aguardando Pagamento", "Concluído"];
@@ -132,7 +133,7 @@ function ChamadosPage() {
                       <Badge variant={statusVariant(d.status)} className="text-[10px]">{d.status}</Badge>
                       <span className={`text-[10px] border rounded px-1.5 py-0.5 ${urgenciaColor(d.urgencia)}`}>{d.urgencia}</span>
                     </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{d.local_obra}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{d.local_obra}{d.whatsapp_contato ? ` · 📱 ${d.whatsapp_contato}` : ""}</div>
                     <div className="text-sm mt-1 line-clamp-2 text-foreground/80">{d.descricao}</div>
                   </div>
                   <div className="text-[10px] text-muted-foreground shrink-0">
@@ -166,6 +167,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
       valor_reparo: demanda.valor_reparo ?? null,
       prazo_resolucao: demanda.prazo_resolucao ?? "",
       notas_pesquisa: demanda.notas_pesquisa ?? "",
+      whatsapp_contato: demanda.whatsapp_contato ?? "",
     });
     (async () => {
       setFotoGeralUrls(await getSignedUrls(demanda.foto_geral_url ?? []));
@@ -186,6 +188,7 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
         valor_reparo: form.valor_reparo || null,
         prazo_resolucao: form.prazo_resolucao || null,
         notas_pesquisa: form.notas_pesquisa || null,
+        whatsapp_contato: form.whatsapp_contato || null,
       })
       .eq("id", demanda.id);
     setSaving(false);
@@ -236,6 +239,10 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
             <div className="space-y-2">
               <Label>Prestador / Oficina</Label>
               <Input value={form.prestador_oficina ?? ""} onChange={(e) => setForm({ ...form, prestador_oficina: e.target.value })} />
+            </div>
+            <div className="space-y-2">
+              <Label>WhatsApp de contato</Label>
+              <Input type="tel" value={form.whatsapp_contato ?? ""} onChange={(e) => setForm({ ...form, whatsapp_contato: e.target.value })} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
