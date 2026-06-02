@@ -33,6 +33,7 @@ const NAV = [
   { to: "/admin/frota", label: "Frota & Documentos", icon: Truck },
   { to: "/admin/manutencao", label: "Manutenção", icon: WrenchIcon },
   { to: "/admin/custos", label: "Custos", icon: DollarSign },
+  { to: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
 ] as const;
 
