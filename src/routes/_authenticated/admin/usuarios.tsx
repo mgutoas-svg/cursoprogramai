@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/usuarios")({
   component: UsuariosPage,
 });
 
-type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at: string | null };
+type AdminUser = { id: string; email: string; created_at: string; last_sign_in_at?: string | null };
 
 function UsuariosPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
