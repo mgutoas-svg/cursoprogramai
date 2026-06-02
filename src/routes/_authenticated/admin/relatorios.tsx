@@ -17,11 +17,7 @@ type Veiculo = {
   id: string;
   placa: string;
   modelo: string;
-  ano: number | null;
-  obra_alocado: string | null;
-  vencimento_ipva: string | null;
-  vencimento_seguro: string | null;
-  vencimento_licenciamento: string | null;
+  ano_modelo: number | null;
 };
 type Custo = { id: string; valor: number; categoria: string; descricao: string; data_gasto: string; veiculo_id: string | null };
 type Manutencao = { id: string; veiculo_id: string; item: string; status_item: string | null; data_proxima_revisao: string | null };
@@ -166,11 +162,8 @@ function RelatoriosPage() {
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm bg-muted px-2 py-0.5 rounded">{veiculo.placa}</span>
                       <span className="font-semibold">{veiculo.modelo}</span>
-                      {veiculo.ano && <span className="text-xs text-muted-foreground">({veiculo.ano})</span>}
+                      {veiculo.ano_modelo && <span className="text-xs text-muted-foreground">({veiculo.ano_modelo})</span>}
                     </div>
-                    {veiculo.obra_alocado && (
-                      <div className="text-xs text-muted-foreground mt-1">Obra: {veiculo.obra_alocado}</div>
-                    )}
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-muted-foreground">Total no período</div>
@@ -219,32 +212,11 @@ function RelatoriosPage() {
                   </div>
                 )}
 
-                {(veiculo.vencimento_ipva || veiculo.vencimento_seguro || veiculo.vencimento_licenciamento) && (
-                  <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-                    <Venc label="IPVA" data={veiculo.vencimento_ipva} />
-                    <Venc label="Seguro" data={veiculo.vencimento_seguro} />
-                    <Venc label="Licenc." data={veiculo.vencimento_licenciamento} />
-                  </div>
-                )}
               </Card>
             );
           })}
         </div>
       )}
-    </div>
-  );
-}
-
-function Venc({ label, data }: { label: string; data: string | null }) {
-  if (!data) return <div className="rounded border border-border p-2 text-muted-foreground">{label}: —</div>;
-  const d = new Date(data);
-  const hoje = new Date();
-  const diff = Math.ceil((d.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-  const cor = diff < 0 ? "text-destructive" : diff < 30 ? "text-yellow-600 dark:text-yellow-500" : "text-foreground";
-  return (
-    <div className="rounded border border-border p-2">
-      <div className="text-muted-foreground">{label}</div>
-      <div className={`font-semibold ${cor}`}>{d.toLocaleDateString("pt-BR")}</div>
     </div>
   );
 }
