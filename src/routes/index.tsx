@@ -63,7 +63,7 @@ function FileField({
 }
 
 function PublicForm() {
-  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "" });
+  const [form, setForm] = useState<Form>({ cliente_nome: "", local_obra: "", descricao: "", whatsapp_contato: "" });
   const [fotosGerais, setFotosGerais] = useState<File[]>([]);
   const [fotosPeca, setFotosPeca] = useState<File[]>([]);
   const [orcamentos, setOrcamentos] = useState<File[]>([]);
