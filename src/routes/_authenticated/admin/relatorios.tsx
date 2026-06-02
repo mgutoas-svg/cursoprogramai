@@ -17,11 +17,7 @@ type Veiculo = {
   id: string;
   placa: string;
   modelo: string;
-  ano: number | null;
-  obra_alocado: string | null;
-  vencimento_ipva: string | null;
-  vencimento_seguro: string | null;
-  vencimento_licenciamento: string | null;
+  ano_modelo: number | null;
 };
 type Custo = { id: string; valor: number; categoria: string; descricao: string; data_gasto: string; veiculo_id: string | null };
 type Manutencao = { id: string; veiculo_id: string; item: string; status_item: string | null; data_proxima_revisao: string | null };
