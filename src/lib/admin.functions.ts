@@ -20,10 +20,19 @@ export const bootstrapDefaultAdmin = createServerFn({ method: "POST" }).handler(
     return { created: false, email: DEFAULT_ADMIN_EMAIL };
   }
 
-  // Procura usuário pelo email
-  const { data: list, error: listErr } = await supabaseAdmin.auth.admin.listUsers();
-  if (listErr) throw new Error(listErr.message);
-  let userId = list.users.find((u) => u.email === DEFAULT_ADMIN_EMAIL)?.id;
+  // Procura usuário pelo email (paginado)
+  async function findByEmail(): Promise<string | undefined> {
+    for (let page = 1; page <= 20; page++) {
+      const { data, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+      if (error) throw new Error(error.message);
+      const hit = data.users.find((u) => u.email === DEFAULT_ADMIN_EMAIL);
+      if (hit) return hit.id;
+      if (data.users.length < 200) return undefined;
+    }
+    return undefined;
+  }
+
+  let userId = await findByEmail();
 
   if (!userId) {
     const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
@@ -31,8 +40,13 @@ export const bootstrapDefaultAdmin = createServerFn({ method: "POST" }).handler(
       password: DEFAULT_ADMIN_PASSWORD,
       email_confirm: true,
     });
-    if (createErr) throw new Error(createErr.message);
-    userId = created.user!.id;
+    if (createErr) {
+      // Pode ter sido criado entre o list e o create — tenta achar novamente
+      userId = await findByEmail();
+      if (!userId) throw new Error(createErr.message);
+    } else {
+      userId = created.user!.id;
+    }
   }
 
   const { error: roleErr } = await supabaseAdmin
