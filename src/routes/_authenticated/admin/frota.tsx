@@ -178,6 +178,7 @@ function FormField({ label, type = "text", className = "", value, onChange }: { 
       <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
+}
 
 
 type FormState = {
