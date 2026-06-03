@@ -171,6 +171,15 @@ function FrotaPage() {
   );
 }
 
+function FormField({ label, type = "text", className = "", value, onChange }: { k: string; label: string; type?: string; className?: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className={`space-y-1.5 ${className}`}>
+      <Label className="text-xs">{label}</Label>
+      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+
+
 type FormState = {
   placa: string; modelo: string;
   renavam: string; exercicio: string; ano_fabricacao: string; ano_modelo: string;
