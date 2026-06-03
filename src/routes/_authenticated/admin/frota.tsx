@@ -171,6 +171,16 @@ function FrotaPage() {
   );
 }
 
+function FormField({ label, type = "text", className = "", value, onChange }: { k?: string; label: string; type?: string; className?: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className={`space-y-1.5 ${className}`}>
+      <Label className="text-xs">{label}</Label>
+      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+
 type FormState = {
   placa: string; modelo: string;
   renavam: string; exercicio: string; ano_fabricacao: string; ano_modelo: string;
@@ -278,12 +288,9 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
     }
   }
 
-  const Field = ({ k, label, type = "text", className = "" }: { k: keyof FormState; label: string; type?: string; className?: string }) => (
-    <div className={`space-y-1.5 ${className}`}>
-      <Label className="text-xs">{label}</Label>
-      <Input type={type} value={form[k]} onChange={(e) => setField(k, e.target.value)} />
-    </div>
-  );
+
+
+
 
   return (
     <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -312,47 +319,47 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
 
         <div className="text-xs font-semibold uppercase text-muted-foreground">Identificação</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <Field k="placa" label="Placa *" />
-          <Field k="renavam" label="RENAVAM" />
-          <Field k="exercicio" label="Exercício" type="number" />
-          <Field k="numero_crv" label="Nº do CRV" />
-          <Field k="codigo_seguranca_cla" label="Cód. segurança CLA" />
-          <Field k="placa_anterior" label="Placa anterior" />
+          <FormField label="Placa *"  value={form.placa} onChange={(v) => setField("placa", v)} />
+          <FormField label="RENAVAM"  value={form.renavam} onChange={(v) => setField("renavam", v)} />
+          <FormField label="Exercício" type="number"  value={form.exercicio} onChange={(v) => setField("exercicio", v)} />
+          <FormField label="Nº do CRV"  value={form.numero_crv} onChange={(v) => setField("numero_crv", v)} />
+          <FormField label="Cód. segurança CLA"  value={form.codigo_seguranca_cla} onChange={(v) => setField("codigo_seguranca_cla", v)} />
+          <FormField label="Placa anterior"  value={form.placa_anterior} onChange={(v) => setField("placa_anterior", v)} />
         </div>
 
         <div className="text-xs font-semibold uppercase text-muted-foreground">Veículo</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div className="col-span-2 sm:col-span-3">
-            <Field k="modelo" label="Marca / Modelo / Versão *" />
+            <FormField label="Marca / Modelo / Versão *" value={form.modelo} onChange={(v) => setField("modelo", v)} />
           </div>
-          <Field k="ano_fabricacao" label="Ano fabricação" type="number" />
-          <Field k="ano_modelo" label="Ano modelo" type="number" />
-          <Field k="cor_predominante" label="Cor predominante" />
-          <Field k="combustivel" label="Combustível" />
-          <Field k="especie_tipo" label="Espécie / Tipo" />
-          <Field k="categoria" label="Categoria" />
-          <Field k="cat" label="CAT" />
-          <Field k="carroceria" label="Carroceria" />
-          <Field k="chassi" label="Chassi" />
+          <FormField label="Ano fabricação" type="number"  value={form.ano_fabricacao} onChange={(v) => setField("ano_fabricacao", v)} />
+          <FormField label="Ano modelo" type="number"  value={form.ano_modelo} onChange={(v) => setField("ano_modelo", v)} />
+          <FormField label="Cor predominante"  value={form.cor_predominante} onChange={(v) => setField("cor_predominante", v)} />
+          <FormField label="Combustível"  value={form.combustivel} onChange={(v) => setField("combustivel", v)} />
+          <FormField label="Espécie / Tipo" value={form.especie_tipo} onChange={(v) => setField("especie_tipo", v)} />
+          <FormField label="Categoria"  value={form.categoria} onChange={(v) => setField("categoria", v)} />
+          <FormField label="CAT"  value={form.cat} onChange={(v) => setField("cat", v)} />
+          <FormField label="Carroceria"  value={form.carroceria} onChange={(v) => setField("carroceria", v)} />
+          <FormField label="Chassi"  value={form.chassi} onChange={(v) => setField("chassi", v)} />
         </div>
 
         <div className="text-xs font-semibold uppercase text-muted-foreground">Especificações técnicas</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <Field k="potencia_cilindrada" label="Potência / Cilindrada" />
-          <Field k="peso_bruto_total" label="Peso bruto total" />
-          <Field k="cmt" label="CMT" />
-          <Field k="capacidade" label="Capacidade" />
-          <Field k="eixos" label="Eixos" type="number" />
-          <Field k="lotacao" label="Lotação" />
-          <Field k="motor" label="Motor" />
+          <FormField label="Potência / Cilindrada" value={form.potencia_cilindrada} onChange={(v) => setField("potencia_cilindrada", v)} />
+          <FormField label="Peso bruto total"  value={form.peso_bruto_total} onChange={(v) => setField("peso_bruto_total", v)} />
+          <FormField label="CMT"  value={form.cmt} onChange={(v) => setField("cmt", v)} />
+          <FormField label="Capacidade"  value={form.capacidade} onChange={(v) => setField("capacidade", v)} />
+          <FormField label="Eixos" type="number"  value={form.eixos} onChange={(v) => setField("eixos", v)} />
+          <FormField label="Lotação"  value={form.lotacao} onChange={(v) => setField("lotacao", v)} />
+          <FormField label="Motor"  value={form.motor} onChange={(v) => setField("motor", v)} />
         </div>
 
         <div className="text-xs font-semibold uppercase text-muted-foreground">Proprietário & Emissão</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div className="col-span-2"><Field k="proprietario_nome" label="Nome do proprietário" /></div>
-          <Field k="proprietario_cpf_cnpj" label="CPF / CNPJ" />
-          <Field k="local_emissao" label="Local de emissão" />
-          <Field k="data_emissao" label="Data de emissão" type="date" />
+          <div className="col-span-2"><FormField label="Nome do proprietário"  value={form.proprietario_nome} onChange={(v) => setField("proprietario_nome", v)} /></div>
+          <FormField label="CPF / CNPJ" value={form.proprietario_cpf_cnpj} onChange={(v) => setField("proprietario_cpf_cnpj", v)} />
+          <FormField label="Local de emissão"  value={form.local_emissao} onChange={(v) => setField("local_emissao", v)} />
+          <FormField label="Data de emissão" type="date"  value={form.data_emissao} onChange={(v) => setField("data_emissao", v)} />
         </div>
 
         <Button onClick={save} disabled={saving} className="w-full">
