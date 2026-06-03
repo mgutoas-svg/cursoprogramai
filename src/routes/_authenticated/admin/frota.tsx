@@ -278,7 +278,10 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
     }
   }
 
-  const Field = renderField;
+  const Field = ({ k, label, type = "text", className = "" }: { k: keyof FormState; label: string; type?: string; className?: string }) => (
+    <FormField k={k} label={label} type={type} className={className} value={form[k]} onChange={(v) => setField(k, v)} />
+  );
+
 
 
 
