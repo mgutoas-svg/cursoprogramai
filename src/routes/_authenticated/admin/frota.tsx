@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Sparkles, Loader2, Truck, FileText } from "lucide-react";
+import { Plus, Sparkles, Loader2, Truck, FileText, Pencil, Trash2 } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
 import { useServerFn } from "@tanstack/react-start";
 import { extrairOCR } from "@/lib/ocr.functions";
@@ -82,6 +82,8 @@ function FrotaPage() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Veiculo | null>(null);
+  const [editing, setEditing] = useState<Veiculo | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function fetchAll() {
     setLoading(true);
@@ -92,6 +94,17 @@ function FrotaPage() {
   }
 
   useEffect(() => { fetchAll(); }, []);
+
+  async function handleDelete(v: Veiculo) {
+    if (!confirm(`Excluir veículo ${v.placa}? Esta ação não pode ser desfeita.`)) return;
+    setDeleting(true);
+    const { error } = await supabase.from("veiculos").delete().eq("id", v.id);
+    setDeleting(false);
+    if (error) return toast.error(error.message);
+    toast.success("Veículo excluído");
+    setDetail(null);
+    fetchAll();
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -146,6 +159,14 @@ function FrotaPage() {
                 <span className="text-sm font-normal text-muted-foreground">— {detail.modelo}</span>
               </DialogTitle>
             </DialogHeader>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" onClick={() => { setEditing(detail); setDetail(null); }}>
+                <Pencil className="h-4 w-4 mr-2" /> Editar
+              </Button>
+              <Button size="sm" variant="destructive" disabled={deleting} onClick={() => handleDelete(detail)}>
+                <Trash2 className="h-4 w-4 mr-2" /> Excluir
+              </Button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {CRLV_FIELDS.map(({ key, label }) => {
                 const val = detail[key];
@@ -165,6 +186,12 @@ function FrotaPage() {
               </a>
             )}
           </DialogContent>
+        )}
+      </Dialog>
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        {editing && (
+          <VeiculoForm initial={editing} onSaved={() => { setEditing(null); fetchAll(); }} />
         )}
       </Dialog>
     </div>
@@ -199,12 +226,45 @@ const EMPTY_FORM: FormState = {
   carroceria: "", proprietario_nome: "", proprietario_cpf_cnpj: "", local_emissao: "", data_emissao: "",
 };
 
-function VeiculoForm({ onSaved }: { onSaved: () => void }) {
+function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veiculo }) {
   const ocrFn = useServerFn(extrairOCR);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const toStr = (v: unknown) => (v === null || v === undefined ? "" : String(v));
+  const initialForm: FormState = initial
+    ? {
+        placa: toStr(initial.placa),
+        modelo: toStr(initial.modelo),
+        renavam: toStr(initial.renavam),
+        exercicio: toStr(initial.exercicio),
+        ano_fabricacao: toStr(initial.ano_fabricacao),
+        ano_modelo: toStr(initial.ano_modelo),
+        numero_crv: toStr(initial.numero_crv),
+        codigo_seguranca_cla: toStr(initial.codigo_seguranca_cla),
+        cat: toStr(initial.cat),
+        categoria: toStr(initial.categoria),
+        especie_tipo: toStr(initial.especie_tipo),
+        placa_anterior: toStr(initial.placa_anterior),
+        chassi: toStr(initial.chassi),
+        cor_predominante: toStr(initial.cor_predominante),
+        combustivel: toStr(initial.combustivel),
+        capacidade: toStr(initial.capacidade),
+        potencia_cilindrada: toStr(initial.potencia_cilindrada),
+        peso_bruto_total: toStr(initial.peso_bruto_total),
+        motor: toStr(initial.motor),
+        cmt: toStr(initial.cmt),
+        eixos: toStr(initial.eixos),
+        lotacao: toStr(initial.lotacao),
+        carroceria: toStr(initial.carroceria),
+        proprietario_nome: toStr(initial.proprietario_nome),
+        proprietario_cpf_cnpj: toStr(initial.proprietario_cpf_cnpj),
+        local_emissao: toStr(initial.local_emissao),
+        data_emissao: toStr(initial.data_emissao),
+      }
+    : EMPTY_FORM;
+  const [form, setForm] = useState<FormState>(initialForm);
   const [crlvFile, setCrlvFile] = useState<File | null>(null);
   const [scanning, setScanning] = useState(false);
   const [saving, setSaving] = useState(false);
+  const isEdit = !!initial;
 
   function setField<K extends keyof FormState>(k: K, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
@@ -244,11 +304,11 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
     }
     setSaving(true);
     try {
-      let crlv_url: string | null = null;
+      let crlv_url: string | null = initial?.crlv_url ?? null;
       if (crlvFile) crlv_url = await uploadFile(crlvFile, "veiculos/crlv");
       const num = (s: string) => (s ? parseInt(s) : null);
       const str = (s: string) => (s ? s : null);
-      const { error } = await supabase.from("veiculos").insert({
+      const payload = {
         placa: form.placa.toUpperCase(),
         modelo: form.modelo,
         renavam: str(form.renavam),
@@ -277,9 +337,12 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
         local_emissao: str(form.local_emissao),
         data_emissao: form.data_emissao || null,
         crlv_url,
-      });
+      };
+      const { error } = isEdit && initial
+        ? await supabase.from("veiculos").update(payload).eq("id", initial.id)
+        : await supabase.from("veiculos").insert(payload);
       if (error) throw error;
-      toast.success("Veículo cadastrado");
+      toast.success(isEdit ? "Veículo atualizado" : "Veículo cadastrado");
       onSaved();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : String(err));
@@ -294,7 +357,7 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
 
   return (
     <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-      <DialogHeader><DialogTitle>Novo veículo</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isEdit ? "Editar veículo" : "Novo veículo"}</DialogTitle></DialogHeader>
       <div className="space-y-4">
         <div className="rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -363,7 +426,7 @@ function VeiculoForm({ onSaved }: { onSaved: () => void }) {
         </div>
 
         <Button onClick={save} disabled={saving} className="w-full">
-          {saving ? "Salvando..." : "Salvar veículo"}
+          {saving ? "Salvando..." : isEdit ? "Salvar alterações" : "Salvar veículo"}
         </Button>
       </div>
     </DialogContent>
