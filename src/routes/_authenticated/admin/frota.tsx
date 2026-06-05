@@ -357,7 +357,7 @@ function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veic
 
   return (
     <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-      <DialogHeader><DialogTitle>Novo veículo</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isEdit ? "Editar veículo" : "Novo veículo"}</DialogTitle></DialogHeader>
       <div className="space-y-4">
         <div className="rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 p-4">
           <div className="flex items-center gap-2 mb-2">
