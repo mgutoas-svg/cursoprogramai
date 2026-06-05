@@ -304,11 +304,11 @@ function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veic
     }
     setSaving(true);
     try {
-      let crlv_url: string | null = null;
+      let crlv_url: string | null = initial?.crlv_url ?? null;
       if (crlvFile) crlv_url = await uploadFile(crlvFile, "veiculos/crlv");
       const num = (s: string) => (s ? parseInt(s) : null);
       const str = (s: string) => (s ? s : null);
-      const { error } = await supabase.from("veiculos").insert({
+      const payload = {
         placa: form.placa.toUpperCase(),
         modelo: form.modelo,
         renavam: str(form.renavam),
@@ -337,9 +337,12 @@ function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veic
         local_emissao: str(form.local_emissao),
         data_emissao: form.data_emissao || null,
         crlv_url,
-      });
+      };
+      const { error } = isEdit && initial
+        ? await supabase.from("veiculos").update(payload).eq("id", initial.id)
+        : await supabase.from("veiculos").insert(payload);
       if (error) throw error;
-      toast.success("Veículo cadastrado");
+      toast.success(isEdit ? "Veículo atualizado" : "Veículo cadastrado");
       onSaved();
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : String(err));
