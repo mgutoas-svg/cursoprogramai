@@ -426,7 +426,7 @@ function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veic
         </div>
 
         <Button onClick={save} disabled={saving} className="w-full">
-          {saving ? "Salvando..." : "Salvar veículo"}
+          {saving ? "Salvando..." : isEdit ? "Salvar alterações" : "Salvar veículo"}
         </Button>
       </div>
     </DialogContent>
