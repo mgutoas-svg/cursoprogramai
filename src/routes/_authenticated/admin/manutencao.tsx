@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Wrench } from "lucide-react";
+import { Plus, Wrench, Pencil, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/manutencao")({
   head: () => ({ meta: [{ title: "Manutenção Preventiva — OperaFlow" }] }),
@@ -47,6 +47,7 @@ function ManutencaoPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function fetchAll() {
@@ -59,6 +60,14 @@ function ManutencaoPage() {
     setLoading(false);
   }
   useEffect(() => { fetchAll(); }, []);
+
+  async function handleDelete(it: Item) {
+    if (!confirm(`Excluir item "${it.item}"?`)) return;
+    const { error } = await supabase.from("manutencao_preventiva").delete().eq("id", it.id);
+    if (error) return toast.error(error.message);
+    toast.success("Item excluído");
+    fetchAll();
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -101,22 +110,47 @@ function ManutencaoPage() {
                       {it.data_proxima_revisao && <span className="ml-2">📅 {new Date(it.data_proxima_revisao).toLocaleDateString("pt-BR")}</span>}
                     </div>
                   </div>
-                  <span className={`text-xs border rounded px-2 py-1 ${s.cls}`}>{s.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs border rounded px-2 py-1 ${s.cls}`}>{s.label}</span>
+                    <Button size="icon" variant="ghost" onClick={() => setEditing(it)} aria-label="Editar">
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => handleDelete(it)} aria-label="Excluir">
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
                 </li>
               );
             })}
           </ul>
         </Card>
       )}
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        {editing && (
+          <ItemForm
+            veiculos={veiculos}
+            initial={editing}
+            onSaved={() => { setEditing(null); fetchAll(); }}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }
 
-function ItemForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => void }) {
+function ItemForm({ veiculos, onSaved, initial }: { veiculos: Veiculo[]; onSaved: () => void; initial?: Item }) {
+  const toStr = (v: unknown) => (v === null || v === undefined ? "" : String(v));
   const [form, setForm] = useState({
-    veiculo_id: "", item: "", km_ultima_troca: "", km_atual: "", km_proxima_troca: "", data_proxima_revisao: "",
+    veiculo_id: initial?.veiculo_id ?? "",
+    item: initial?.item ?? "",
+    km_ultima_troca: toStr(initial?.km_ultima_troca),
+    km_atual: toStr(initial?.km_atual),
+    km_proxima_troca: toStr(initial?.km_proxima_troca),
+    data_proxima_revisao: initial?.data_proxima_revisao ?? "",
   });
   const [saving, setSaving] = useState(false);
+  const isEdit = !!initial;
 
   async function save() {
     if (!form.veiculo_id || !form.item) {
@@ -124,23 +158,26 @@ function ItemForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => v
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("manutencao_preventiva").insert({
+    const payload = {
       veiculo_id: form.veiculo_id,
       item: form.item,
       km_ultima_troca: form.km_ultima_troca ? parseInt(form.km_ultima_troca) : null,
       km_atual: form.km_atual ? parseInt(form.km_atual) : null,
       km_proxima_troca: form.km_proxima_troca ? parseInt(form.km_proxima_troca) : null,
       data_proxima_revisao: form.data_proxima_revisao || null,
-    });
+    };
+    const { error } = isEdit && initial
+      ? await supabase.from("manutencao_preventiva").update(payload).eq("id", initial.id)
+      : await supabase.from("manutencao_preventiva").insert(payload);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Item cadastrado");
+    toast.success(isEdit ? "Item atualizado" : "Item cadastrado");
     onSaved();
   }
 
   return (
     <DialogContent>
-      <DialogHeader><DialogTitle>Novo item de manutenção</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isEdit ? "Editar item de manutenção" : "Novo item de manutenção"}</DialogTitle></DialogHeader>
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Veículo</Label>
@@ -158,7 +195,7 @@ function ItemForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => v
           <div className="space-y-2"><Label className="text-xs">KM próxima</Label><Input type="number" value={form.km_proxima_troca} onChange={(e) => setForm({ ...form, km_proxima_troca: e.target.value })} /></div>
         </div>
         <div className="space-y-2"><Label>Data próxima revisão</Label><Input type="date" value={form.data_proxima_revisao} onChange={(e) => setForm({ ...form, data_proxima_revisao: e.target.value })} /></div>
-        <Button onClick={save} disabled={saving} className="w-full">{saving ? "Salvando..." : "Salvar"}</Button>
+        <Button onClick={save} disabled={saving} className="w-full">{saving ? "Salvando..." : isEdit ? "Salvar alterações" : "Salvar"}</Button>
       </div>
     </DialogContent>
   );
