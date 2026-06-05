@@ -226,12 +226,45 @@ const EMPTY_FORM: FormState = {
   carroceria: "", proprietario_nome: "", proprietario_cpf_cnpj: "", local_emissao: "", data_emissao: "",
 };
 
-function VeiculoForm({ onSaved }: { onSaved: () => void }) {
+function VeiculoForm({ onSaved, initial }: { onSaved: () => void; initial?: Veiculo }) {
   const ocrFn = useServerFn(extrairOCR);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const toStr = (v: unknown) => (v === null || v === undefined ? "" : String(v));
+  const initialForm: FormState = initial
+    ? {
+        placa: toStr(initial.placa),
+        modelo: toStr(initial.modelo),
+        renavam: toStr(initial.renavam),
+        exercicio: toStr(initial.exercicio),
+        ano_fabricacao: toStr(initial.ano_fabricacao),
+        ano_modelo: toStr(initial.ano_modelo),
+        numero_crv: toStr(initial.numero_crv),
+        codigo_seguranca_cla: toStr(initial.codigo_seguranca_cla),
+        cat: toStr(initial.cat),
+        categoria: toStr(initial.categoria),
+        especie_tipo: toStr(initial.especie_tipo),
+        placa_anterior: toStr(initial.placa_anterior),
+        chassi: toStr(initial.chassi),
+        cor_predominante: toStr(initial.cor_predominante),
+        combustivel: toStr(initial.combustivel),
+        capacidade: toStr(initial.capacidade),
+        potencia_cilindrada: toStr(initial.potencia_cilindrada),
+        peso_bruto_total: toStr(initial.peso_bruto_total),
+        motor: toStr(initial.motor),
+        cmt: toStr(initial.cmt),
+        eixos: toStr(initial.eixos),
+        lotacao: toStr(initial.lotacao),
+        carroceria: toStr(initial.carroceria),
+        proprietario_nome: toStr(initial.proprietario_nome),
+        proprietario_cpf_cnpj: toStr(initial.proprietario_cpf_cnpj),
+        local_emissao: toStr(initial.local_emissao),
+        data_emissao: toStr(initial.data_emissao),
+      }
+    : EMPTY_FORM;
+  const [form, setForm] = useState<FormState>(initialForm);
   const [crlvFile, setCrlvFile] = useState<File | null>(null);
   const [scanning, setScanning] = useState(false);
   const [saving, setSaving] = useState(false);
+  const isEdit = !!initial;
 
   function setField<K extends keyof FormState>(k: K, v: string) {
     setForm((f) => ({ ...f, [k]: v }));
