@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Sparkles, Loader2, Truck, FileText } from "lucide-react";
+import { Plus, Sparkles, Loader2, Truck, FileText, Pencil, Trash2 } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
 import { useServerFn } from "@tanstack/react-start";
 import { extrairOCR } from "@/lib/ocr.functions";
