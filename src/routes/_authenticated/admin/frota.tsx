@@ -82,6 +82,8 @@ function FrotaPage() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [detail, setDetail] = useState<Veiculo | null>(null);
+  const [editing, setEditing] = useState<Veiculo | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function fetchAll() {
     setLoading(true);
@@ -92,6 +94,17 @@ function FrotaPage() {
   }
 
   useEffect(() => { fetchAll(); }, []);
+
+  async function handleDelete(v: Veiculo) {
+    if (!confirm(`Excluir veículo ${v.placa}? Esta ação não pode ser desfeita.`)) return;
+    setDeleting(true);
+    const { error } = await supabase.from("veiculos").delete().eq("id", v.id);
+    setDeleting(false);
+    if (error) return toast.error(error.message);
+    toast.success("Veículo excluído");
+    setDetail(null);
+    fetchAll();
+  }
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -146,6 +159,14 @@ function FrotaPage() {
                 <span className="text-sm font-normal text-muted-foreground">— {detail.modelo}</span>
               </DialogTitle>
             </DialogHeader>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" onClick={() => { setEditing(detail); setDetail(null); }}>
+                <Pencil className="h-4 w-4 mr-2" /> Editar
+              </Button>
+              <Button size="sm" variant="destructive" disabled={deleting} onClick={() => handleDelete(detail)}>
+                <Trash2 className="h-4 w-4 mr-2" /> Excluir
+              </Button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {CRLV_FIELDS.map(({ key, label }) => {
                 const val = detail[key];
@@ -165,6 +186,12 @@ function FrotaPage() {
               </a>
             )}
           </DialogContent>
+        )}
+      </Dialog>
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        {editing && (
+          <VeiculoForm initial={editing} onSaved={() => { setEditing(null); fetchAll(); }} />
         )}
       </Dialog>
     </div>
