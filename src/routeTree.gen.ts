@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiPublicResetAdminRouteImport } from './routes/api/public/_reset-admin'
+import { Route as ApiPublicResetAdminOnetimeRouteImport } from './routes/api/public/reset-admin-onetime'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
 import { Route as AuthenticatedAdminRelatoriosRouteImport } from './routes/_authenticated/admin/relatorios'
 import { Route as AuthenticatedAdminManutencaoRouteImport } from './routes/_authenticated/admin/manutencao'
@@ -34,11 +34,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicResetAdminRoute = ApiPublicResetAdminRouteImport.update({
-  id: '/api/public/_reset-admin',
-  path: '/api/public',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiPublicResetAdminOnetimeRoute =
+  ApiPublicResetAdminOnetimeRouteImport.update({
+    id: '/api/public/reset-admin-onetime',
+    path: '/api/public/reset-admin-onetime',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminUsuariosRoute =
   AuthenticatedAdminUsuariosRouteImport.update({
     id: '/admin/usuarios',
@@ -84,7 +85,7 @@ export interface FileRoutesByFullPath {
   '/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
-  '/api/public': typeof ApiPublicResetAdminRoute
+  '/api/public/reset-admin-onetime': typeof ApiPublicResetAdminOnetimeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -95,7 +96,7 @@ export interface FileRoutesByTo {
   '/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
   '/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
-  '/api/public': typeof ApiPublicResetAdminRoute
+  '/api/public/reset-admin-onetime': typeof ApiPublicResetAdminOnetimeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -108,7 +109,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/manutencao': typeof AuthenticatedAdminManutencaoRoute
   '/_authenticated/admin/relatorios': typeof AuthenticatedAdminRelatoriosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
-  '/api/public/_reset-admin': typeof ApiPublicResetAdminRoute
+  '/api/public/reset-admin-onetime': typeof ApiPublicResetAdminOnetimeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,7 +122,7 @@ export interface FileRouteTypes {
     | '/admin/manutencao'
     | '/admin/relatorios'
     | '/admin/usuarios'
-    | '/api/public'
+    | '/api/public/reset-admin-onetime'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -132,7 +133,7 @@ export interface FileRouteTypes {
     | '/admin/manutencao'
     | '/admin/relatorios'
     | '/admin/usuarios'
-    | '/api/public'
+    | '/api/public/reset-admin-onetime'
   id:
     | '__root__'
     | '/'
@@ -144,14 +145,14 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/manutencao'
     | '/_authenticated/admin/relatorios'
     | '/_authenticated/admin/usuarios'
-    | '/api/public/_reset-admin'
+    | '/api/public/reset-admin-onetime'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  ApiPublicResetAdminRoute: typeof ApiPublicResetAdminRoute
+  ApiPublicResetAdminOnetimeRoute: typeof ApiPublicResetAdminOnetimeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -177,11 +178,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/_reset-admin': {
-      id: '/api/public/_reset-admin'
-      path: '/api/public'
-      fullPath: '/api/public'
-      preLoaderRoute: typeof ApiPublicResetAdminRouteImport
+    '/api/public/reset-admin-onetime': {
+      id: '/api/public/reset-admin-onetime'
+      path: '/api/public/reset-admin-onetime'
+      fullPath: '/api/public/reset-admin-onetime'
+      preLoaderRoute: typeof ApiPublicResetAdminOnetimeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/usuarios': {
@@ -254,7 +255,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  ApiPublicResetAdminRoute: ApiPublicResetAdminRoute,
+  ApiPublicResetAdminOnetimeRoute: ApiPublicResetAdminOnetimeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
