@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/api/public/_reset-admin")({
+export const Route = createFileRoute("/api/public/reset-admin-onetime")({
   server: {
     handlers: {
       POST: async ({ request }) => {
