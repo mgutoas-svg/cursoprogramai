@@ -57,7 +57,11 @@ const OCR_SCHEMAS = {
   },
 } as const;
 
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { assertAdmin } from "@/lib/admin.functions";
+
 export const extrairOCR = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: { imageBase64: string; mimeType: string; tipo: "veiculo" | "nota" }) =>
     z.object({
       imageBase64: z.string().min(10),
@@ -65,7 +69,8 @@ export const extrairOCR = createServerFn({ method: "POST" })
       tipo: z.enum(["veiculo", "nota"]),
     }).parse(d)
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) {
       return { error: "LOVABLE_API_KEY ausente." };
