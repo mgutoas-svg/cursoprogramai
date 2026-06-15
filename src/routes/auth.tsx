@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Wrench, Loader2, Info } from "lucide-react";
-import { bootstrapDefaultAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Acesso Administrativo — OperaFlow" }] }),
