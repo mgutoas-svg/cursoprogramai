@@ -18,20 +18,13 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [bootstrap, setBootstrap] = useState<{ email: string; password: string } | null>(null);
+  const [bootstrap] = useState<{ email: string; password: string } | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) navigate({ to: "/admin/chamados", replace: true });
     });
-    // Garante a existência do admin padrão na primeira execução
-    bootstrapDefaultAdmin()
-      .then((res) => {
-        if (res.created && "password" in res) {
-          setBootstrap({ email: res.email, password: res.password as string });
-        }
-      })
-      .catch(() => {});
+  }, [navigate]);
   }, [navigate]);
 
   async function handleLogin(e: React.FormEvent) {
