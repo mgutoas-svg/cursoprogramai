@@ -59,8 +59,6 @@ const OCR_SCHEMAS = {
   },
 } as const;
 
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { assertAdmin } from "@/lib/admin.functions";
 
 export const extrairOCR = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
