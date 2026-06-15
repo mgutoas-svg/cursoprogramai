@@ -25,7 +25,6 @@ function AuthPage() {
       if (data.user) navigate({ to: "/admin/chamados", replace: true });
     });
   }, [navigate]);
-  }, [navigate]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
