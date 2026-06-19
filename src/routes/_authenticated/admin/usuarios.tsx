@@ -29,8 +29,8 @@ function UsuariosPage() {
     try {
       const data = await listAdminUsers();
       setUsers(data);
-    } catch (e: any) {
-      toast.error("Erro ao carregar usuários", { description: e.message });
+    } catch (e: unknown) {
+      toast.error("Erro ao carregar usuários", { description: e instanceof Error ? e.message : String(e) });
     } finally {
       setLoading(false);
     }
@@ -50,8 +50,8 @@ function UsuariosPage() {
       setEmail("");
       setPassword("");
       load();
-    } catch (err: any) {
-      toast.error("Falha ao criar", { description: err.message });
+    } catch (err: unknown) {
+      toast.error("Falha ao criar", { description: err instanceof Error ? err.message : "Erro desconhecido" });
     } finally {
       setCreating(false);
     }
@@ -63,8 +63,8 @@ function UsuariosPage() {
       await deleteAdminUser({ data: { userId: id } });
       toast.success("Administrador removido");
       load();
-    } catch (err: any) {
-      toast.error("Falha ao excluir", { description: err.message });
+    } catch (err: unknown) {
+      toast.error("Falha ao excluir", { description: err instanceof Error ? err.message : "Erro ao remover" });
     }
   }
 

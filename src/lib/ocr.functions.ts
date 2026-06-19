@@ -3,6 +3,29 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { assertAdmin } from "@/lib/admin.functions";
 
+export type OCRResultVeiculo = {
+  placa: string;
+  renavam: string;
+  modelo: string;
+  chassi: string;
+  exercicio?: number;
+  ano_fabricacao?: number;
+  ano_modelo?: number;
+  categoria?: string;
+  cor_predominante?: string;
+  combustivel?: string;
+  proprietario_nome?: string;
+  data_emissao?: string;
+};
+
+export type OCRResultNota = {
+  data_gasto?: string;
+  prestador_oficina?: string;
+  valor?: number;
+  placa?: string;
+  descricao?: string;
+};
+
 const OCR_SCHEMAS = {
   veiculo: {
     name: "extract_veiculo_crlv",
@@ -39,7 +62,7 @@ const OCR_SCHEMAS = {
         data_emissao: { type: "string", description: "Data ISO YYYY-MM-DD" },
         valor: { type: "number", description: "Valor total se for multa" },
       },
-      required: [],
+      required: ["placa", "renavam", "modelo", "chassi"],
     },
   },
   nota: {
@@ -54,7 +77,7 @@ const OCR_SCHEMAS = {
         placa: { type: "string", description: "Placa se referenciada na nota" },
         descricao: { type: "string", description: "Resumo do serviço ou produto" },
       },
-      required: [],
+      required: ["data_gasto", "valor", "prestador_oficina"],
     },
   },
 } as const;
@@ -77,8 +100,8 @@ export const extrairOCR = createServerFn({ method: "POST" })
     }
     const schema = OCR_SCHEMAS[data.tipo];
     const systemPrompt = data.tipo === "veiculo"
-      ? "Você é um assistente que extrai dados de documentos veiculares brasileiros (CRLV/multas)."
-      : "Você é um assistente que extrai dados de notas fiscais e recibos de serviços automotivos.";
+      ? "Você é um especialista em documentos veiculares brasileiros (CRLV). Extraia os dados exatamente como constam, formatando datas para YYYY-MM-DD."
+      : "Você é um especialista em notas fiscais brasileiras. Identifique valores, datas e o prestador. Se houver placa do veículo mencionada, extraia-a.";
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -87,13 +110,13 @@ export const extrairOCR = createServerFn({ method: "POST" })
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-2.0-flash",
         messages: [
           { role: "system", content: systemPrompt },
           {
             role: "user",
             content: [
-              { type: "text", text: "Extraia os campos disponíveis. Use null se não encontrar." },
+              { type: "text", text: "Extraia os campos conforme a função definida. Para valores monetários, use apenas números (ponto para decimal). Para datas, use YYYY-MM-DD." },
               { type: "image_url", image_url: { url: `data:${data.mimeType};base64,${data.imageBase64}` } },
             ],
           },

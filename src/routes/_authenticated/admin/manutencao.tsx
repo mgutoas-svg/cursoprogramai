@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Wrench, Pencil, Trash2 } from "lucide-react";
+import { Plus, Wrench, Pencil, Trash2, Search } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/manutencao")({
   head: () => ({ meta: [{ title: "Manutenção Preventiva — OperaFlow" }] }),
@@ -49,6 +49,7 @@ function ManutencaoPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   async function fetchAll() {
     const [i, v] = await Promise.all([
@@ -69,6 +70,11 @@ function ManutencaoPage() {
     fetchAll();
   }
 
+  const filteredItems = items.filter(it => 
+    it.item.toLowerCase().includes(search.toLowerCase()) || 
+    it.veiculos?.placa.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="p-4 md:p-8 space-y-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
@@ -76,12 +82,18 @@ function ManutencaoPage() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Manutenção Preventiva</h1>
           <p className="text-sm text-muted-foreground">Cronograma de revisões e trocas por veículo.</p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" /> Novo item</Button>
-          </DialogTrigger>
-          <ItemForm veiculos={veiculos} onSaved={() => { setOpen(false); fetchAll(); }} />
-        </Dialog>
+        <div className="flex items-center gap-2">
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Buscar item ou placa..." className="pl-8" value={search} onChange={(e) => setSearch(e.target.value)} />
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button><Plus className="h-4 w-4 mr-2" /> Novo item</Button>
+            </DialogTrigger>
+            <ItemForm veiculos={veiculos} onSaved={() => { setOpen(false); fetchAll(); }} />
+          </Dialog>
+        </div>
       </div>
 
       {loading ? (
@@ -94,7 +106,7 @@ function ManutencaoPage() {
       ) : (
         <Card>
           <ul className="divide-y divide-border">
-            {items.map((it) => {
+            {filteredItems.map((it) => {
               const s = computeStatus(it);
               return (
                 <li key={it.id} className="p-4 flex flex-col md:flex-row md:items-center gap-2 md:justify-between">

@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
 // Confirma se o usuário autenticado é admin
 export const checkIsAdmin = createServerFn({ method: "GET" })
@@ -17,7 +19,7 @@ export const checkIsAdmin = createServerFn({ method: "GET" })
     return { isAdmin: !!data };
   });
 
-export async function assertAdmin(context: { supabase: any; userId: string }) {
+export async function assertAdmin(context: { supabase: SupabaseClient<Database>; userId: string }) {
   const { data, error } = await context.supabase
     .from("user_roles")
     .select("role")

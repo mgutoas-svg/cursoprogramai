@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Sparkles, Loader2, DollarSign } from "lucide-react";
+import { Plus, Sparkles, Loader2, DollarSign, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
 import { useServerFn } from "@tanstack/react-start";
-import { extrairOCR } from "@/lib/ocr.functions";
+import { extrairOCR, type OCRResultNota } from "@/lib/ocr.functions";
+import type { Database } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/admin/custos")({
   head: () => ({ meta: [{ title: "Custos — OperaFlow" }] }),
@@ -20,36 +21,48 @@ export const Route = createFileRoute("/_authenticated/admin/custos")({
 
 const CATEGORIAS = ["Combustível", "Manutenção Corretiva", "Manutenção Preventiva", "Imposto/Multa", "Seguro"];
 
-type Custo = {
-  id: string;
-  data_gasto: string;
-  veiculo_id: string | null;
-  categoria: string;
-  descricao: string;
-  valor: number;
-  prestador_oficina: string | null;
+export type CustoComVeiculo = Database['public']['Tables']['custos']['Row'] & {
   veiculos?: { placa: string } | null;
 };
+
 type Veiculo = { id: string; placa: string; modelo: string };
 
 function CustosPage() {
-  const [custos, setCustos] = useState<Custo[]>([]);
+  const [custos, setCustos] = useState<CustoComVeiculo[]>([]);
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 15;
 
-  async function fetchAll() {
+  const fetchAll = useCallback(async () => {
     const [c, v] = await Promise.all([
-      supabase.from("custos").select("*, veiculos(placa)").order("data_gasto", { ascending: false }),
+      supabase
+        .from("custos")
+        .select("*, veiculos(placa)", { count: "exact" })
+        .ilike("descricao", `%${search}%`)
+        .order("data_gasto", { ascending: false })
+        .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1),
       supabase.from("veiculos").select("id, placa, modelo").order("placa"),
     ]);
-    if (c.error) toast.error(c.error.message); else setCustos((c.data ?? []) as Custo[]);
+    if (c.error) {
+      toast.error(c.error.message);
+    } else {
+      setCustos((c.data ?? []) as CustoComVeiculo[]);
+      setTotalCount(c.count ?? 0);
+    }
     if (!v.error) setVeiculos((v.data ?? []) as Veiculo[]);
     setLoading(false);
-  }
-  useEffect(() => { fetchAll(); }, []);
+  }, [page, search]);
 
-  const total = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
+  useEffect(() => {
+    const handler = setTimeout(() => fetchAll(), 300);
+    return () => clearTimeout(handler);
+  }, [fetchAll]);
+
+  const totalGeralVisivel = useMemo(() => custos.reduce((s, c) => s + Number(c.valor), 0), [custos]);
   const totalsByCat = useMemo(() => {
     const out: Record<string, number> = {};
     custos.forEach((c) => { out[c.categoria] = (out[c.categoria] ?? 0) + Number(c.valor); });
@@ -63,18 +76,29 @@ function CustosPage() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Custos & Fluxo Financeiro</h1>
           <p className="text-sm text-muted-foreground">Lançamentos manuais e automáticos de gastos da operação.</p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <div className="flex items-center gap-2">
+          <div className="relative w-full md:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por descrição..."
+              className="pl-8"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+            />
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button><Plus className="h-4 w-4 mr-2" /> Novo lançamento</Button>
           </DialogTrigger>
           <CustoForm veiculos={veiculos} onSaved={() => { setOpen(false); fetchAll(); }} />
         </Dialog>
+        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
         <Card className="p-4 col-span-2 md:col-span-1" style={{ background: "var(--gradient-primary)", color: "var(--primary-foreground)" }}>
-          <div className="text-xs opacity-80">Total geral</div>
-          <div className="text-2xl font-bold mt-1">R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</div>
+          <div className="text-xs opacity-80">Total nesta página</div>
+          <div className="text-2xl font-bold mt-1">R$ {totalGeralVisivel.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</div>
         </Card>
         {CATEGORIAS.slice(0, 3).map((cat) => (
           <Card key={cat} className="p-4">
@@ -120,6 +144,20 @@ function CustosPage() {
             </table>
           </div>
         )}
+        <div className="p-4 border-t border-border flex items-center justify-between gap-4">
+          <div className="text-xs text-muted-foreground">
+            Mostrando {custos.length} de {totalCount} lançamentos
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-xs font-medium">Página {page + 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={(page + 1) * PAGE_SIZE >= totalCount}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </Card>
     </div>
   );
@@ -147,7 +185,8 @@ function CustoForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => 
       if ("error" in result && result.error) {
         toast.error(result.error);
       } else if ("data" in result) {
-        const d: any = result.data;
+        const d = result.data as OCRResultNota;
+        
         const matched = d.placa ? veiculos.find((v) => v.placa.toUpperCase() === String(d.placa).toUpperCase()) : null;
         setForm((f) => ({
           ...f,
@@ -159,8 +198,8 @@ function CustoForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => 
         }));
         toast.success("Dados extraídos! Confira antes de confirmar.");
       }
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Erro ao processar imagem");
     } finally {
       setScanning(false);
     }
@@ -187,8 +226,8 @@ function CustoForm({ veiculos, onSaved }: { veiculos: Veiculo[]; onSaved: () => 
       if (error) throw error;
       toast.success("Custo lançado");
       onSaved();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Erro ao salvar lançamento");
     } finally {
       setSaving(false);
     }

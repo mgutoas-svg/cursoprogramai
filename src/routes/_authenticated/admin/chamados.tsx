@@ -196,11 +196,24 @@ function DetailSheet({ demanda, onClose, onSaved }: { demanda: Demanda | null; o
       })
       .eq("id", demanda.id);
     setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success("Demanda atualizada");
-    if (form.status === "Concluído" && form.valor_reparo) {
-      toast.info("Custo lançado automaticamente na aba Custos.");
+    
+    if (error) {
+      return toast.error(error.message);
     }
+
+    toast.success("Demanda atualizada");
+
+    if (form.status === "Concluído" && form.valor_reparo) {
+      await supabase.from("custos").insert({
+        data_gasto: new Date().toISOString().slice(0, 10),
+        categoria: "Manutenção Corretiva",
+        descricao: `Reparo: ${demanda.descricao}`,
+        valor: form.valor_reparo,
+        prestador_oficina: form.prestador_oficina || "Não informado",
+      });
+      toast.info("Custo lançado automaticamente na aba Financeira.");
+    }
+
     onSaved();
     onClose();
   }
