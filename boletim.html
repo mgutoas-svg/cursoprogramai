@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boletim da Aluna</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="boletim.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Sistema escolar</p>
+        <h1>Boletim da Aluna</h1>
+        <p class="intro">
+          Interface simples, bonita e pronta para você preencher nome, curso, idade, cidade e notas manualmente.
+        </p>
+      </div>
+
+      <div class="status-card status-aprovada" id="status-card">
+        <span class="status-label">Situação</span>
+        <strong id="status-text">Aguardando dados</strong>
+        <small id="status-detail">Preencha o formulário e clique em Ver boletim.</small>
+      </div>
+    </section>
+
+    <section class="boletim-grid">
+      <form class="card form-card" id="boletim-form">
+        <span class="label">Dados para preenchimento</span>
+
+        <div class="field-grid">
+          <label>
+            <span>Nome</span>
+            <input type="text" id="nome" value="Mário Augusto Aires e Silva" />
+          </label>
+
+          <label>
+            <span>Curso</span>
+            <input type="text" id="curso" value="Desenvolvimento de Sistemas" />
+          </label>
+
+          <label>
+            <span>Idade</span>
+            <input type="number" id="idade" value="30" min="0" />
+          </label>
+
+          <label>
+            <span>Cidade</span>
+            <input type="text" id="cidade" value="João Pessoa - PB" />
+          </label>
+        </div>
+
+        <div class="notes-inputs">
+          <label>
+            <span>Nota 1</span>
+            <input type="number" id="nota1" value="8" min="0" max="10" step="0.1" />
+          </label>
+
+          <label>
+            <span>Nota 2</span>
+            <input type="number" id="nota2" value="7" min="0" max="10" step="0.1" />
+          </label>
+
+          <label>
+            <span>Nota 3</span>
+            <input type="number" id="nota3" value="9" min="0" max="10" step="0.1" />
+          </label>
+        </div>
+
+        <button type="submit">Ver boletim</button>
+      </form>
+
+      <article class="card info-card">
+        <span class="label">Dados pessoais</span>
+        <div class="info-line"><strong>Nome:</strong> <span id="preview-nome">Mário Augusto Aires e Silva</span></div>
+        <div class="info-line"><strong>Curso:</strong> <span id="preview-curso">Desenvolvimento de Sistemas</span></div>
+        <div class="info-line"><strong>Idade:</strong> <span id="preview-idade">30 anos</span></div>
+        <div class="info-line"><strong>Cidade:</strong> <span id="preview-cidade">João Pessoa - PB</span></div>
+      </article>
+
+      <article class="card notes-card">
+        <span class="label">Notas</span>
+        <div class="notes-list">
+          <div class="note-pill" id="preview-nota1">8</div>
+          <div class="note-pill" id="preview-nota2">7</div>
+          <div class="note-pill" id="preview-nota3">9</div>
+        </div>
+        <div class="media-box">
+          <span>Média final</span>
+          <strong id="media-final">8.0</strong>
+        </div>
+      </article>
+
+      <article class="card action-card">
+        <span class="label">Resultado</span>
+        <p id="resultado-texto">Preencha os campos acima e clique em Ver boletim.</p>
+        <div class="result-badge" id="resultado-badge">Aguardando</div>
+      </article>
+    </section>
+  </main>
+
+  <script src="boletim.js"></script>
+</body>
+</html>
