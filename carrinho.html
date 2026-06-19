@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrinho de Compras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="carrinho.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Projeto JavaScript</p>
+        <h1>Carrinho de Compras</h1>
+        <p class="intro">Uma tela simples para visualizar 3 produtos e o total somado automaticamente com JavaScript.</p>
+      </div>
+
+      <aside class="summary-card">
+        <span class="label">Total do carrinho</span>
+        <strong id="total-carrinho">R$ 0,00</strong>
+        <small id="qtd-produtos">3 produtos no carrinho</small>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="card products-card">
+        <span class="label">Produtos</span>
+        <form class="add-form" id="produto-form">
+          <label>
+            <span>Nome do produto</span>
+            <input type="text" id="produto-nome" placeholder="Ex.: Webcam" />
+          </label>
+
+          <label>
+            <span>Preço</span>
+            <input type="number" id="produto-preco" placeholder="Ex.: 199.90" min="0" step="0.01" />
+          </label>
+
+          <button type="submit">Adicionar ao carrinho</button>
+        </form>
+
+        <div class="products-list" id="produtos-lista"></div>
+      </article>
+
+      <article class="card total-card">
+        <span class="label">Resumo</span>
+        <div class="line"><strong>Itens:</strong> <span id="itens-total">3</span></div>
+        <div class="line"><strong>Total:</strong> <span id="total-resultado">R$ 0,00</span></div>
+        <div class="line destaque"><strong>Status:</strong> <span>Pronto para compra</span></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="carrinho.js"></script>
+</body>
+</html>

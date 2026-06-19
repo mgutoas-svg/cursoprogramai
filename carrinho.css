@@ -1,0 +1,268 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-1: #0f172a;
+  --bg-2: #111827;
+  --card: rgba(255, 255, 255, 0.93);
+  --card-border: rgba(148, 163, 184, 0.2);
+  --text: #0f172a;
+  --muted: #64748b;
+  --primary: #7c3aed;
+  --primary-dark: #6d28d9;
+  --accent: #16a34a;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(124, 58, 237, 0.22), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(22, 163, 74, 0.16), transparent 24%),
+    linear-gradient(135deg, var(--bg-1), var(--bg-2));
+}
+
+.page {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 32px 20px 40px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.45fr 0.85fr;
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+
+.eyebrow,
+.label {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ede9fe;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  letter-spacing: -0.04em;
+}
+
+.intro {
+  max-width: 60ch;
+  margin: 14px 0 0;
+  color: #cbd5e1;
+  line-height: 1.7;
+  font-size: 1.02rem;
+}
+
+.summary-card,
+.card {
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+}
+
+.summary-card {
+  border-radius: 28px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.summary-card small {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.card {
+  border-radius: 26px;
+  padding: 22px;
+}
+
+.products-card,
+.total-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.add-form {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.add-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-form label span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.add-form input {
+  width: 100%;
+  border: 1px solid #dbe3ee;
+  border-radius: 16px;
+  padding: 13px 14px;
+  font: inherit;
+  color: var(--text);
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.add-form input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+  background: #fff;
+}
+
+.add-form button {
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 12px 24px rgba(124, 58, 237, 0.28);
+  white-space: nowrap;
+}
+
+.add-form button:hover {
+  transform: translateY(-2px);
+}
+
+.products-list {
+  display: grid;
+  gap: 12px;
+}
+
+.product-item {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.product-item strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #0f172a;
+}
+
+.product-item span {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.price-tag {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--primary-dark);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.line strong {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.line span {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.line.destaque {
+  border-color: rgba(22, 163, 74, 0.2);
+  background: rgba(22, 163, 74, 0.06);
+}
+
+.line.destaque span {
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .hero,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 18px 14px 28px;
+  }
+
+  .card,
+  .summary-card {
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .product-item,
+  .line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-form {
+    grid-template-columns: 1fr;
+  }
+}
