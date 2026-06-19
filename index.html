@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="c:\Workspace\01-frontend\style.css">
+</head>
+<body>
+    <!-- Seção de Autenticação Centralizada -->
+    <div id="auth-container">
+        <!-- Tela de Login -->
+        <div id="login-card" class="auth-card">
+            <h2>Bem-vindo</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Acesse sua conta para continuar</p>
+            
+            <form id="login-form">
+                <input type="email" placeholder="E-mail" required>
+                <input type="password" placeholder="Senha" required>
+                <button type="submit" class="btn-primary">Entrar</button>
+                <div style="text-align: right; margin-top: -5px;">
+                    <a href="#" class="auth-link" onclick="showCard('recovery-card')">Esqueceu a senha?</a>
+                </div>
+            </form>
+
+            <div class="social-auth">
+                <button class="btn-google" aria-label="Entrar com Google">
+                    <i class="fab fa-google"></i> Continuar com Google
+                </button>
+                <button class="btn-apple" aria-label="Entrar com Apple">
+                    <i class="fab fa-apple"></i> Continuar com Apple
+                </button>
+            </div>
+
+            <p style="text-align: center; margin-top: 25px; font-size: 0.9rem;">
+                Não tem uma conta? <a href="#" class="auth-link" style="font-weight: 600;" onclick="showCard('signup-card')">Crie agora</a>
+            </p>
+        </div>
+
+        <!-- Tela de Cadastro -->
+        <div id="signup-card" class="auth-card hidden">
+            <h2>Criar Conta</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Preencha os dados abaixo</p>
+            
+            <form id="signup-form">
+                <input type="text" placeholder="Nome Completo" required>
+                <input type="email" placeholder="E-mail" required>
+                <input type="password" placeholder="Senha" required>
+                <input type="password" placeholder="Confirmar Senha" required>
+                <button type="submit" class="btn-primary">Cadastrar</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                Já tem conta? <a href="#" class="auth-link" onclick="showCard('login-card')">Voltar ao login</a>
+            </p>
+        </div>
+
+        <!-- Tela de Recuperação de Senha -->
+        <div id="recovery-card" class="auth-card hidden">
+            <h2>Recuperar Acesso</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Enviaremos um link de recuperação para o seu e-mail.</p>
+            
+            <form id="recovery-form">
+                <input type="email" placeholder="Seu e-mail cadastrado" required>
+                <button type="submit" class="btn-primary">Enviar Link</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                Lembrou a senha? <a href="#" class="auth-link" onclick="showCard('login-card')">Voltar ao login</a>
+            </p>
+        </div>
+
+        <!-- Tela de Confirmação de Sucesso -->
+        <div id="confirmation-card" class="auth-card hidden">
+            <div style="text-align: center;">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2 style="margin-top: 20px;">Conta Criada!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Sua conta foi criada com sucesso. Você já pode acessar o sistema.</p>
+                
+                <button class="btn-primary" onclick="showCard('login-card')">Ir para o Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard mantido conforme anterior -->
+
+    <!-- Seção do Dashboard (Navegação Lateral) -->
+    <div id="dashboard-container" class="dashboard hidden">
+        <aside class="sidebar">
+            <h3>Meu Sistema</h3>
+            <ul>
+                <li class="active"><i class="fas fa-chart-line"></i> Dashboard</li>
+                <li><i class="fas fa-car"></i> Veículos</li>
+                <li><i class="fas fa-calendar-alt"></i> Manutenções</li>
+                <li><i class="fas fa-cog"></i> Configurações</li>
+                <li style="margin-top: auto; color: #f87171;"><i class="fas fa-sign-out-alt"></i> Sair</li>
+            </ul>
+        </aside>
+        <main class="content">
+            <header>
+                <h2>Visão Geral</h2>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 0.9rem; font-weight: 500;">Olá, Administrador</span>
+                    <div style="width: 35px; height: 35px; background: #cbd5e1; border-radius: 50%;"></div>
+                </div>
+            </header>
+            <div class="grid-container">
+                <!-- O conteúdo das "telas" entrará aqui -->
+                <div style="background: white; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <p>Selecione uma opção no menu lateral para navegar entre as telas.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Função para alternar entre as telas de autenticação
+        function showCard(cardId) {
+            // Esconde todos os cards de autenticação
+            const cards = document.querySelectorAll('.auth-card');
+            cards.forEach(card => card.classList.add('hidden'));
+
+            // Mostra o card selecionado
+            const targetCard = document.getElementById(cardId);
+            if (targetCard) {
+                targetCard.classList.remove('hidden');
+            }
+        }
+
+        // Simulação do processo de cadastro e envio de e-mail
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Aqui entraria a lógica de integração com o backend
+            // Por enquanto, simulamos o sucesso e mostramos a tela de confirmação
+            showCard('confirmation-card');
+        });
+    </script>
+</body>
+</html>
