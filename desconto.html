@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Desconto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="desconto.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Calculadora de preço</p>
+        <h1>Aplicar desconto</h1>
+        <p class="intro">Digite o preço e o percentual para ver o valor final com desconto aplicado.</p>
+      </div>
+
+      <aside class="summary-card">
+        <span class="label">Resultado</span>
+        <strong id="resultado-texto">Preço final com desconto: R$ 0,00</strong>
+        <small id="resultado-arrow">Arrow: R$ 0,00</small>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <form class="card form-card" id="desconto-form">
+        <span class="label">Dados do desconto</span>
+
+        <div class="field-grid">
+          <label>
+            <span>Preço original</span>
+            <input type="number" id="preco" value="100" min="0" step="0.01" />
+          </label>
+
+          <label>
+            <span>Percentual (%)</span>
+            <input type="number" id="percentual" value="10" min="0" max="100" step="0.1" />
+          </label>
+        </div>
+
+        <button type="submit">Calcular desconto</button>
+      </form>
+
+      <article class="card values-card">
+        <span class="label">Detalhes</span>
+        <div class="line"><strong>Preço:</strong> <span id="valor-preco">R$ 100,00</span></div>
+        <div class="line"><strong>Desconto:</strong> <span id="valor-percentual">10%</span></div>
+        <div class="line"><strong>Valor descontado:</strong> <span id="valor-desconto">R$ 10,00</span></div>
+        <div class="line final"><strong>Preço final:</strong> <span id="valor-final">R$ 90,00</span></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="desconto.js"></script>
+</body>
+</html>
