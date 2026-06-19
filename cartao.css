@@ -1,0 +1,71 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+}
+
+.cartao {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  min-width: 240px;
+}
+
+.cartao h2 {
+  margin: 0 0 12px;
+}
+
+.cartao p {
+  margin: 0 0 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.cartao button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cartao button:hover {
+  background: #334155;
+}
+
+.cartao:nth-of-type(1) button {
+  background: #dc2626;
+}
+
+.cartao:nth-of-type(1) button:hover {
+  background: #b91c1c;
+}
+
+.cartao:nth-of-type(2) button {
+  background: #eab308;
+  color: #111827;
+}
+
+.cartao:nth-of-type(2) button:hover {
+  background: #ca8a04;
+}
+
+.cartao:nth-of-type(3) button {
+  background: #16a34a;
+}
+
+.cartao:nth-of-type(3) button:hover {
+  background: #15803d;
+}
